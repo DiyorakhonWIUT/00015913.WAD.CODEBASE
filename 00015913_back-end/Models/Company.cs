@@ -3,15 +3,9 @@
     /*     00015913      */
     public class Company
     {
-        public int CompanyId { get; set; } // Primary Key
-        public string Name { get; set; }
-        public string Address { get; set; }
-
-        // Navigation Property
-        public ICollection<JobPost> JobPosts { get; set; }
+        public int CompanyId { get; set; }
+        public string? Name { get; set; }
+        public string? Address { get; set; }
     }
-
 }
-
-
 /*     00015913      */

@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using _00015913_back_end.Data;
-
+/*    00015913    */
 namespace _00015913_back_end.Controllers
 {
     [Route("api/[controller]")]
@@ -15,14 +15,14 @@ namespace _00015913_back_end.Controllers
         {
             _context = context;
         }
-
+        /*    00015913    */
         // GET: api/Company
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Company>>> GetCompanies()
         {
             return await _context.Companies.ToListAsync();
         }
-
+        /*    00015913    */
         // PUT: api/Company/5
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateCompany(int id, Company company)
@@ -52,7 +52,7 @@ namespace _00015913_back_end.Controllers
 
             return NoContent();
         }
-
+        /*    00015913    */
         // POST: api/Company
         [HttpPost]
         public async Task<ActionResult<Company>> PostCompany(Company company)
@@ -62,7 +62,7 @@ namespace _00015913_back_end.Controllers
 
             return CreatedAtAction(nameof(GetCompanies), new { id = company.CompanyId }, company);
         }
-
+        /*    00015913    */
         // DELETE: api/Company/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCompany(int id)
@@ -85,3 +85,4 @@ namespace _00015913_back_end.Controllers
         }
     }
 }
+/*    00015913    */

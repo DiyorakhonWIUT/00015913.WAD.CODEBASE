@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using _00015913_back_end.Data;
+using _00015913_back_end.Repositories;
 /*    00015913    */
 namespace _00015913_back_end.Controllers
 {
@@ -9,18 +10,28 @@ namespace _00015913_back_end.Controllers
     [ApiController]
     public class CompanyController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
+        private readonly ICompanyRepository _repository;
 
-        public CompanyController(ApplicationDbContext context)
+        public CompanyController(ICompanyRepository repository)
         {
-            _context = context;
+            _repository = repository;
         }
         /*    00015913    */
         // GET: api/Company
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Company>>> GetCompanies()
         {
-            return await _context.Companies.ToListAsync();
+            var companies = await _repository.GetAllCompaniesAsync();
+            return Ok(companies);
+        }
+        /*    00015913    */
+        // POST: api/Company
+        [HttpPost]
+        public async Task<ActionResult> CreateCompany(Company company)
+        {
+            await _repository.AddCompanyAsync(company);
+            await _repository.SaveAsync();
+            return CreatedAtAction(nameof(GetCompanies), new { id = company.CompanyId }, company);
         }
         /*    00015913    */
         // PUT: api/Company/5
@@ -32,56 +43,18 @@ namespace _00015913_back_end.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(company).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!CompanyExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
+            await _repository.UpdateCompanyAsync(company);
+            await _repository.SaveAsync();
             return NoContent();
         }
-        /*    00015913    */
-        // POST: api/Company
-        [HttpPost]
-        public async Task<ActionResult<Company>> PostCompany(Company company)
-        {
-            _context.Companies.Add(company);
-            await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetCompanies), new { id = company.CompanyId }, company);
-        }
-        /*    00015913    */
         // DELETE: api/Company/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCompany(int id)
         {
-            var company = await _context.Companies.FindAsync(id);
-            if (company == null)
-            {
-                return NotFound();
-            }
-
-            _context.Companies.Remove(company);
-            await _context.SaveChangesAsync();
-
+            await _repository.DeleteCompanyAsync(id);
+            await _repository.SaveAsync();
             return NoContent();
-        }
-
-        private bool CompanyExists(int id)
-        {
-            return _context.Companies.Any(e => e.CompanyId == id);
         }
     }
 }
